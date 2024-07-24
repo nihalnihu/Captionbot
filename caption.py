@@ -4,6 +4,8 @@ import io
 from flask import Flask
 import logging
 import threading
+import io
+import tempfile
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,42 +25,43 @@ def health_check():
 def run_flask():
     bot.run(host='0.0.0.0', port=8080)
     
-
 # Replace with your actual credentials
-api_id = '25731065'
-api_hash = 'be534fb5a5afd8c3308c9ca92afde672'
-bot_token = '7213907869:AAGGYfN9m0OdUVtk-LzhEtyKJx3qVO8_DPI'
+api_id = 'YOUR_API_ID'
+api_hash = 'YOUR_API_HASH'
+bot_token = 'YOUR_BOT_TOKEN'
 
 app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 @app.on_message(filters.video)
 async def handle_video(client, message):
-    # Download the video to memory
-    video_stream = io.BytesIO()
-    await message.download(video_stream)
-    video_stream.seek(0)
+    # Download the video to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False) as temp_input:
+        await message.download(temp_input.name)
+        temp_input.seek(0)
 
-    # Load the video into moviepy
-    video_clip = VideoFileClip(io.BytesIO(video_stream.read()))
+        # Load the video into moviepy
+        video_clip = VideoFileClip(temp_input.name)
 
-    # Create a text clip
-    txt_clip = TextClip("Your Caption Here", fontsize=24, color='white', bg_color='black', size=video_clip.size)
+        # Create a text clip
+        txt_clip = TextClip("Your Caption Here", fontsize=24, color='white', bg_color='black', size=video_clip.size)
 
-    # Position the text at the top of the video
-    txt_clip = txt_clip.set_position(('center', 'top')).set_duration(video_clip.duration)
+        # Position the text at the top of the video
+        txt_clip = txt_clip.set_position(('center', 'top')).set_duration(video_clip.duration)
 
-    # Overlay the text on the video
-    video_with_caption = CompositeVideoClip([video_clip, txt_clip])
+        # Overlay the text on the video
+        video_with_caption = CompositeVideoClip([video_clip, txt_clip])
 
-    # Save the edited video to a BytesIO object
-    output_video_stream = io.BytesIO()
-    video_with_caption.write_videofile(output_video_stream, codec='libx264', audio_codec='aac', fps=24, threads=4, verbose=False)
+        # Save the edited video to another temporary file
+        with tempfile.NamedTemporaryFile(delete=False) as temp_output:
+            video_with_caption.write_videofile(temp_output.name, codec='libx264', audio_codec='aac', fps=24, threads=4, verbose=False)
+            temp_output.seek(0)
 
-    # Ensure we seek to the start of the BytesIO stream before sending
-    output_video_stream.seek(0)
+            # Send the edited video back
+            await message.reply_video(temp_output.name, caption="Here is your video with the caption at the top.")
 
-    # Send the edited video back
-    await message.reply_video(output_video_stream, caption="Here is your video with the caption at the top.")
+
+
+
 
 if __name__ == '__main__':
     threading.Thread(target=run_flask).start()
