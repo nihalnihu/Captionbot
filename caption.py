@@ -1,15 +1,12 @@
 from pyrogram import Client, filters
 from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
-import io
-from flask import Flask
-import logging
-import threading
-import io
 import tempfile
+import logging
+from flask import Flask
+import threading
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 # Initialize Flask
 bot = Flask(__name__)
@@ -23,12 +20,12 @@ def health_check():
     return 'Healthy', 200
 
 def run_flask():
-    bot.run(host='0.0.0.0', port=8080)
-    
+    bot.run(host='0.0.0.0', port=8080, use_reloader=False)
+
 # Replace with your actual credentials
-api_id = 'YOUR_API_ID'
-api_hash = 'YOUR_API_HASH'
-bot_token = 'YOUR_BOT_TOKEN'
+api_id = '25731065'
+api_hash = 'be534fb5a5afd8c3308c9ca92afde672'
+bot_token = '7213907869:AAGGYfN9m0OdUVtk-LzhEtyKJx3qVO8_DPI'
 
 app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
@@ -59,11 +56,8 @@ async def handle_video(client, message):
             # Send the edited video back
             await message.reply_video(temp_output.name, caption="Here is your video with the caption at the top.")
 
-
-
-
-
 if __name__ == '__main__':
+    # Start Flask in a separate thread
     threading.Thread(target=run_flask).start()
     
     # Start the Pyrogram Client
