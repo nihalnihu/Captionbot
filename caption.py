@@ -1,7 +1,4 @@
 from pyrogram import Client, filters
-from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
-import tempfile
-import logging
 from flask import Flask
 import threading
 import asyncio
@@ -32,34 +29,8 @@ app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 @app.on_message(filters.video)
 async def handle_video(client, message):
-    try:
-        # Download the video to a temporary file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_input:
-            await message.download(temp_input.name)
-            temp_input.seek(0)
-
-            # Load the video into moviepy
-            video_clip = VideoFileClip(temp_input.name)
-
-            # Create a text clip
-            txt_clip = TextClip("Your Caption Here", fontsize=24, color='white', bg_color='black', size=video_clip.size)
-
-            # Position the text at the top of the video
-            txt_clip = txt_clip.set_position(('center', 'top')).set_duration(video_clip.duration)
-
-            # Overlay the text on the video
-            video_with_caption = CompositeVideoClip([video_clip, txt_clip])
-
-            # Save the edited video to another temporary file
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_output:
-                video_with_caption.write_videofile(temp_output.name, codec='libx264', audio_codec='aac', fps=24, threads=4, verbose=False)
-                temp_output.seek(0)
-
-                # Send the edited video back
-                await message.reply_video(temp_output.name, caption="Here is your video with the caption at the top.")
-                
-    except Exception as e:
-        logger.error(f"Error processing video: {e}")
+    logger.info(f"Received video from user {message.from_user.id}")
+    await message.reply_text("Video received!")
 
 async def main():
     # Start the Pyrogram Client
