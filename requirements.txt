@@ -1,0 +1,2 @@
+moviepy==1.0.3
+pyrogram==2.0.106
