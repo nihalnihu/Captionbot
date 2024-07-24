@@ -65,6 +65,7 @@ async def main():
     # Start the Pyrogram Client
     await app.start()
     logger.info("Pyrogram client started")
+    await asyncio.Event().wait()  # Keep the bot running
 
 if __name__ == '__main__':
     # Start Flask in a separate thread
