@@ -25,9 +25,9 @@ def run_flask():
     
 
 # Replace with your actual credentials
-api_id = 'YOUR_API_ID'
-api_hash = 'YOUR_API_HASH'
-bot_token = 'YOUR_BOT_TOKEN'
+api_id = '25731065'
+api_hash = 'be534fb5a5afd8c3308c9ca92afde672'
+bot_token = '7213907869:AAGGYfN9m0OdUVtk-LzhEtyKJx3qVO8_DPI'
 
 app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
