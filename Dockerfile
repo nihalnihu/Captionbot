@@ -9,7 +9,7 @@ RUN apt-get update -qq && apt-get -y install ffmpeg && \
 WORKDIR /usr/src/app
 
 # Copy the application code
-COPY . .
+COPY requirements.txt requirements.txt
 
 # Install Python dependencies
 RUN pip install -U -r requirements.txt
