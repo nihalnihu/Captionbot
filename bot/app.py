@@ -1,31 +1,37 @@
 from flask import Flask, request, jsonify
 import logging
 from bot.sample_video_bot import SampleVideoBot
+import threading
+import asyncio
 
 app = Flask(__name__)
 
 # Initialize your bot
 bot = SampleVideoBot()
 
+# Start the bot in a separate thread
+def start_bot():
+    asyncio.run(bot.start())
+
 @app.route('/')
 def home():
     return "Welcome to the Sample Video Bot API!"
 
 @app.route('/start_bot', methods=['POST'])
-def start_bot():
+def start_bot_route():
     """Start the bot."""
     try:
-        bot.start()  # Consider running this asynchronously if needed
+        threading.Thread(target=start_bot).start()
         return jsonify({"status": "Bot started"}), 200
     except Exception as e:
         logging.error(f"Error starting bot: {e}")
         return jsonify({"error": "Failed to start bot"}), 500
 
 @app.route('/stop_bot', methods=['POST'])
-def stop_bot():
+def stop_bot_route():
     """Stop the bot."""
     try:
-        bot.stop()  # Consider running this asynchronously if needed
+        bot.stop()
         return jsonify({"status": "Bot stopped"}), 200
     except Exception as e:
         logging.error(f"Error stopping bot: {e}")
