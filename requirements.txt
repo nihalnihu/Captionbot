@@ -1,4 +1,6 @@
-moviepy==1.0.3
-pyrogram==2.0.106
-Flask==3.0.3
-TgCrypto
+pyrogram
+tgcrypto
+motor
+dnspython
+async-timeout
+aiohttp
