@@ -14,14 +14,22 @@ def home():
 @app.route('/start_bot', methods=['POST'])
 def start_bot():
     """Start the bot."""
-    bot.start()
-    return jsonify({"status": "Bot started"}), 200
+    try:
+        bot.start()  # Consider running this asynchronously if needed
+        return jsonify({"status": "Bot started"}), 200
+    except Exception as e:
+        logging.error(f"Error starting bot: {e}")
+        return jsonify({"error": "Failed to start bot"}), 500
 
 @app.route('/stop_bot', methods=['POST'])
 def stop_bot():
     """Stop the bot."""
-    bot.stop()
-    return jsonify({"status": "Bot stopped"}), 200
+    try:
+        bot.stop()  # Consider running this asynchronously if needed
+        return jsonify({"status": "Bot stopped"}), 200
+    except Exception as e:
+        logging.error(f"Error stopping bot: {e}")
+        return jsonify({"error": "Failed to stop bot"}), 500
 
 @app.route('/handle_sample_video', methods=['POST'])
 def handle_sample_video():
@@ -29,7 +37,7 @@ def handle_sample_video():
     data = request.json
     if 'file_id' in data:
         file_id = data['file_id']
-        # Example response
+        # Example response; you might want to process the file_id here
         return jsonify({"file_id": file_id, "message": "Sample video request received"}), 200
     else:
         return jsonify({"error": "Invalid request"}), 400
