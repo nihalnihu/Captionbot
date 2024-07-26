@@ -1,10 +1,11 @@
-FROM python:latest
+FROM python:3.12.4-buster
 
-WORKDIR /app
+RUN apt-get update -qq && apt-get -y install ffmpeg
 
-COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir --verbose
+WORKDIR /usr/src/app
 
 COPY . .
 
-CMD ["python", "Bot.py"]
+RUN pip install -U -r requirements.txt
+
+CMD [ "python", "-m", "bot.sample_video_bot" ]
