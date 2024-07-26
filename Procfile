@@ -1,1 +1,2 @@
-web: python -m bot.sample_video_bot
+web: gunicorn -b 0.0.0.0:8080 app:app
+worker: python bot.py
