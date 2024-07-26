@@ -18,21 +18,25 @@ class SampleVideoBot(Client):
 
     async def start(self):
         await super().start()
-        print(f"Bot started")
+        log.info("Bot started")
 
     async def stop(self):
         await super().stop()
-        print("Bot stopped")
+        log.info("Bot stopped")
 
     @staticmethod
     async def handle_sample_video(client: Client, message: Message):
-        file_path = message.document.file_id  # Assuming the file is received as a document
-        output_folder = "output"  # Folder where the sample video will be saved
+        if not message.document:
+            await message.reply_text("Please send a document.")
+            return
+
+        file_id = message.document.file_id
+        output_folder = "output"
         duration = Config.SAMPLE_VIDEO_DURATION
 
         await message.reply_text(Messages.SAMPLE_VIDEO_PROCESS_START)
 
-        sample_video = await Utilities.generate_sample_video(file_path, output_folder, duration)
+        sample_video = await Utilities.generate_sample_video(file_id, output_folder, duration)
 
         if sample_video:
             await message.reply_document(sample_video, caption=Messages.SAMPLE_VIDEO_PROCESS_SUCCESS)
@@ -41,5 +45,9 @@ class SampleVideoBot(Client):
 
 if __name__ == "__main__":
     bot = SampleVideoBot()
+
+    # Add a handler to the bot
     bot.add_handler(filters.document & filters.private, SampleVideoBot.handle_sample_video)
+
+    # Run the bot
     bot.run()
