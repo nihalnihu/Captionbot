@@ -1,4 +1,3 @@
-import logging
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from bot.config import Config
@@ -10,7 +9,7 @@ log = logging.getLogger(__name__)
 class SampleVideoBot(Client):
     def __init__(self):
         super().__init__(
-            session_name=Config.SESSION_NAME,
+            "my_bot",  # Session name
             bot_token=Config.BOT_TOKEN,
             api_id=Config.API_ID,
             api_hash=Config.API_HASH,
