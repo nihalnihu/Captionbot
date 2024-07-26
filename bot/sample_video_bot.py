@@ -5,7 +5,6 @@ from pyrogram.types import Message
 import threading
 import signal
 import sys
-from werkzeug.serving import make_server
 from bot.config import Config
 from bot.messages import Messages
 from bot.utils import Utilities
@@ -88,8 +87,7 @@ def handle_sample_video():
         return jsonify({"error": "Invalid request"}), 400
 
 def run_flask():
-    server = make_server('0.0.0.0', 8080, flask_app)
-    server.serve_forever()
+    flask_app.run(host='0.0.0.0', port=8080)
 
 def signal_handler(sig, frame):
     print('Signal received, shutting down...')
