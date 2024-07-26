@@ -1,4 +1,4 @@
-FROM python:3.12.4-buster
+FROM python:latest
 
 RUN apt-get update -qq && apt-get -y install ffmpeg
 
