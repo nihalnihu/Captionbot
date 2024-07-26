@@ -1,5 +1,8 @@
-flask
+Flask
 pyrogram
 tgcrypto
-aiohttp
+motor
+dnspython
 async-timeout
+aiohttp
+gunicorn
