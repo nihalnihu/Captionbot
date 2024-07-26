@@ -7,4 +7,4 @@ RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir 
 
 COPY . .
 
-CMD ["python", "caption.py"]
+CMD ["python", "Bot.py"]
