@@ -1,6 +1,6 @@
 werkzeug
-Flask
-pyrogram
+Flask==3.0.3
+pyrogram==2.0.106
 tgcrypto
 motor
 dnspython
