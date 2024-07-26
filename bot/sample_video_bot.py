@@ -9,6 +9,9 @@ from bot.config import Config
 from bot.messages import Messages
 from bot.utils import Utilities
 
+# Set up logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 # Set up Flask app
 flask_app = Flask(__name__)
 
@@ -18,7 +21,7 @@ log = logging.getLogger(__name__)
 class SampleVideoBot(Client):
     def __init__(self):
         super().__init__(
-            "my_bot",  # Session name
+            "my_bot",
             bot_token=Config.BOT_TOKEN,
             api_id=Config.API_ID,
             api_hash=Config.API_HASH,
@@ -63,7 +66,7 @@ def start_bot():
         bot.loop.create_task(bot.start())  # Start the bot asynchronously
         return jsonify({"status": "Bot started"}), 200
     except Exception as e:
-        logging.error(f"Error starting bot: {e}")
+        log.error(f"Error starting bot: {e}")
         return jsonify({"error": "Failed to start bot"}), 500
 
 @flask_app.route('/stop_bot', methods=['POST'])
@@ -73,7 +76,7 @@ def stop_bot():
         bot.loop.create_task(bot.stop())  # Stop the bot asynchronously
         return jsonify({"status": "Bot stopped"}), 200
     except Exception as e:
-        logging.error(f"Error stopping bot: {e}")
+        log.error(f"Error stopping bot: {e}")
         return jsonify({"error": "Failed to stop bot"}), 500
 
 @flask_app.route('/handle_sample_video', methods=['POST'])
@@ -90,7 +93,7 @@ def run_flask():
     flask_app.run(host='0.0.0.0', port=8080)
 
 def signal_handler(sig, frame):
-    print('Signal received, shutting down...')
+    log.info('Signal received, shutting down...')
     bot.loop.create_task(bot.stop())  # Stop the bot gracefully
     sys.exit(0)
 
