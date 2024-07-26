@@ -8,4 +8,4 @@ COPY . .
 
 RUN pip install -U -r requirements.txt
 
-CMD [ "python", "-m", "bot.sample_video_bot" ]
+CMD ["python", "-m", "bot.app"]
