@@ -10,11 +10,7 @@ from bot.config import Config
 from bot.messages import Messages
 from bot.utils import Utilities
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# Set up Pyrogram bot
-log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 class SampleVideoBot(Client):
     def __init__(self):
@@ -27,33 +23,15 @@ class SampleVideoBot(Client):
 
     async def start(self):
         await super().start()
-        log.info("Bot started")
+        logging.info("Bot started")
 
     async def stop(self):
         await super().stop()
-        log.info("Bot stopped")
+        logging.info("Bot stopped")
 
     @staticmethod
-    async def handle_sample_video(client: Client, message: Message):
-        if not message.document:
-            await message.reply_text("Please send a document.")
-            return
-
-        file_id = message.document.file_id
-        output_folder = "output"
-        duration = Config.SAMPLE_VIDEO_DURATION
-
-        await message.reply_text(Messages.SAMPLE_VIDEO_PROCESS_START)
-
-        sample_video = await Utilities.generate_sample_video(file_id, output_folder, duration)
-
-        if sample_video:
-            await message.reply_document(sample_video, caption=Messages.SAMPLE_VIDEO_PROCESS_SUCCESS)
-        else:
-            await message.reply_text(Messages.SAMPLE_VIDEO_PROCESS_FAILED)
-
-    @staticmethod
-    async def handle_start_command(client: Client, message: Message):
+    async def handle_start_command(client, message):
+        logging.info("Handling /start command")
         await message.reply_text("Welcome! Send a document to generate a sample video.")
 
 app = SampleVideoBot()
