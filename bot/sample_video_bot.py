@@ -17,7 +17,7 @@ def home():
     return "Bot is running"
 
 def run_flask():
-    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
 
 # Pyrogram bot setup
 class SampleVideoBot(Client):
