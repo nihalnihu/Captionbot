@@ -1,23 +1,10 @@
-from flask import Flask
 from pyrogram import Client, filters
 from bot.config import Config
 from bot.messages import Messages
 from bot.utils import Utilities
 import logging
-import threading
-import os
 
 logging.basicConfig(level=logging.DEBUG)
-
-# Flask setup
-flask_app = Flask(__name__)
-
-@flask_app.route('/')
-def home():
-    return "Bot is running"
-
-def run_flask():
-    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
 
 # Pyrogram bot setup
 class SampleVideoBot(Client):
@@ -75,8 +62,5 @@ def run_bot():
     bot_app.run()
 
 if __name__ == "__main__":
-    # Start Flask server in a separate thread
-    threading.Thread(target=run_flask).start()
-    
     # Start Pyrogram bot
     run_bot()
