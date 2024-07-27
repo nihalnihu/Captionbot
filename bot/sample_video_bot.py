@@ -52,8 +52,8 @@ class SampleVideoBot(Client):
         else:
             await message.reply_text(Messages.SAMPLE_VIDEO_PROCESS_FAILED)
 
-bot = SampleVideoBot()
+app = SampleVideoBot()
     
 if __name__ == "__main__":
     keep_alive()
-    bot.run()
+    app.run()
