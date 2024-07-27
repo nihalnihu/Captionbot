@@ -7,3 +7,4 @@ dnspython
 async-timeout
 aiohttp
 gunicorn
+threading
