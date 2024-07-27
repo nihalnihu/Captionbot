@@ -16,8 +16,11 @@ RUN pip install -r requirements.txt
 # Copy the rest of your application code
 COPY . .
 
+# Make entrypoint.sh executable
+RUN chmod +x entrypoint.sh
+
 # Expose the port that your Flask app will run on
 EXPOSE 8000
 
-# Define the command to run the application
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "bot.web:app"]
+# Define the command to run the entrypoint script
+ENTRYPOINT ["./entrypoint.sh"]
