@@ -10,7 +10,8 @@ class Utilities:
         process = await asyncio.create_subprocess_exec(
             *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
-        return await process.communicate()
+        stdout, stderr = await process.communicate()
+        return stdout, stderr
 
     @staticmethod
     async def generate_sample_video(file_path, output_folder, duration):
@@ -31,11 +32,14 @@ class Utilities:
             "-strict",
             "experimental",
             "-y",
-            str(output_file),
+            output_file,
         ]
         output, error = await Utilities.run_subprocess(ffmpeg_cmd)
-        log.debug(f"FFmpeg output: {output}")
-        log.debug(f"FFmpeg error: {error}")
+        log.debug(f"FFmpeg output: {output.decode().strip()}")
+        log.debug(f"FFmpeg error: {error.decode().strip()}")
+        
         if not os.path.exists(output_file):
+            log.error(f"Failed to generate video. Output file not found: {output_file}")
             return None
+        
         return output_file
