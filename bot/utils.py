@@ -7,10 +7,13 @@ log = logging.getLogger(__name__)
 class Utilities:
     @staticmethod
     async def run_subprocess(cmd):
+        log.debug(f"Running command: {' '.join(cmd)}")
         process = await asyncio.create_subprocess_exec(
             *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         stdout, stderr = await process.communicate()
+        log.debug(f"Command output: {stdout.decode()}")
+        log.debug(f"Command error: {stderr.decode()}")
         return stdout, stderr
 
     @staticmethod
@@ -34,12 +37,10 @@ class Utilities:
             "-y",
             output_file,
         ]
+        log.info(f"Generating sample video from {file_path} with duration {duration} seconds.")
         output, error = await Utilities.run_subprocess(ffmpeg_cmd)
-        log.debug(f"FFmpeg output: {output.decode().strip()}")
-        log.debug(f"FFmpeg error: {error.decode().strip()}")
-        
         if not os.path.exists(output_file):
-            log.error(f"Failed to generate video. Output file not found: {output_file}")
+            log.error(f"Sample video was not created. Check FFmpeg command and input file.")
             return None
-        
+        log.info(f"Sample video created successfully: {output_file}")
         return output_file
