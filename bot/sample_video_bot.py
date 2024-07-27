@@ -10,14 +10,14 @@ import os
 logging.basicConfig(level=logging.DEBUG)
 
 # Flask setup
-app = Flask(__name__)
+flask_app = Flask(__name__)
 
-@app.route('/')
+@flask_app.route('/')
 def home():
     return "Bot is running"
 
 def run_flask():
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    flask_app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
 
 # Pyrogram bot setup
 class SampleVideoBot(Client):
@@ -61,19 +61,22 @@ class SampleVideoBot(Client):
         else:
             await message.reply_text(Messages.SAMPLE_VIDEO_PROCESS_FAILED)
 
-app = SampleVideoBot()
+bot_app = SampleVideoBot()
 
-@app.on_message(filters.command("start"))
+@bot_app.on_message(filters.command("start"))
 async def start_command_handler(client, message):
     await SampleVideoBot.handle_start_command(client, message)
 
-@app.on_message(filters.document)
+@bot_app.on_message(filters.document)
 async def document_handler(client, message):
     await SampleVideoBot.handle_sample_video(client, message)
 
 def run_bot():
-    app.run()
+    bot_app.run()
 
 if __name__ == "__main__":
+    # Start Flask server in a separate thread
     threading.Thread(target=run_flask).start()
+    
+    # Start Pyrogram bot
     run_bot()
