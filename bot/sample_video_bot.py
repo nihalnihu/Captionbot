@@ -52,8 +52,16 @@ class SampleVideoBot(Client):
         else:
             await message.reply_text(Messages.SAMPLE_VIDEO_PROCESS_FAILED)
 
+    @staticmethod
+    async def handle_start_command(client: Client, message: Message):
+        await message.reply_text("Welcome! Send a document to generate a sample video.")
+
 app = SampleVideoBot()
-    
+
+@app.on_message(filters.command("start"))
+async def start_command_handler(client, message):
+    await SampleVideoBot.handle_start_command(client, message)
+
 if __name__ == "__main__":
     keep_alive()
     app.run()
